@@ -1,49 +1,48 @@
 #include <windows.h>
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow) {
-	
-	// サンプルコード
-	//TCHAR chStr[128];
-	// TEXT()でワイド文字列に対応
-	//wsprintf(chStr, TEXT("hInstance : %d"), hInstance);
-	//MessageBox(NULL, chStr, TEXT("雨やめて"), MB_OK | MB_ICONINFORMATION);
-	
-	// ウィンドウタイトル取得
-	//GetWindowTextA();
-
-	// 前景ウィンドウhandle取得
-	// GetForegroundWindow();
-
-	// フォーカスを持ったウィンドウhandle取得 
-	// GetActiveWindow();
-	
-
-
 	HWND hwnd = NULL;
-	CHAR lpstr[128];
-	// テスト用Sleep() : ForegroundWindowを変更するための時間 
+	TCHAR lpstr[128]; // TCHAR 型に変更
 	Sleep(3000);
 	hwnd = GetForegroundWindow();
-	TCHAR chStr[128];
+	TCHAR chStr[128]; // TCHAR 型に変更
+	SYSTEMTIME lt; // ローカルの日付と時刻取得用変数
+	GetLocalTime(&lt); // 直接 SYSTEMTIME 型を代入
+	LPSYSTEMTIME lpSystemTime = &lt;
+
 	// TEXT()でワイド文字列に対応
 	wsprintf(chStr, TEXT("hInstance : %d"), hInstance);
 
 	if (hwnd != NULL) {
-		if (GetWindowTextA(hwnd, lpstr, sizeof(lpstr)) != 0) {
-			MessageBoxA(NULL, lpstr, "アクティブウィンドウ", MB_OK);
+		if (GetWindowText(hwnd, lpstr, sizeof(lpstr) / sizeof(TCHAR)) != 0) { // TCHAR 型を扱うよう修正
+			wsprintf(chStr, TEXT("%s %02d:%02d:%02d"), lpstr, lt.wHour, lt.wMinute, lt.wSecond); // TCHAR 型を扱うよう修正
+			MessageBox(NULL, chStr, TEXT("アクティブウィンドウ"), MB_OK); // TCHAR 型を扱うよう修正
 		}
 	}
 	else {
-		MessageBox(NULL, chStr, TEXT("雨やめて"), MB_OK | MB_ICONINFORMATION);
+		MessageBox(NULL, chStr, TEXT("雨やめて"), MB_OK | MB_ICONINFORMATION); // TCHAR 型を扱うよう修正
 	}
-	
-
 	return 0;
 }
 
 
 
 
+
+// サンプルコード
+//TCHAR chStr[128];
+// TEXT()でワイド文字列に対応
+//wsprintf(chStr, TEXT("hInstance : %d"), hInstance);
+//MessageBox(NULL, chStr, TEXT("雨やめて"), MB_OK | MB_ICONINFORMATION);
+
+// ウィンドウタイトル取得
+//GetWindowTextA();
+
+// 前景ウィンドウhandle取得
+// GetForegroundWindow();
+
+// フォーカスを持ったウィンドウhandle取得 
+// GetActiveWindow();
 
 
 
